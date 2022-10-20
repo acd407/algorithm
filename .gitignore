@@ -1,0 +1,12 @@
+.vscode/
+*.exe
+*.o
+*.obj
+*.out
+*.jar
+*.log
+*.toc
+*.aux
+*.ppm
+*.pbm
+*.pgm
