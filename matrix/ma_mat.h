@@ -37,7 +37,7 @@ void ma_tsp(ma_mat *src) {
 void ma_pnt(ma_mat *src) {
     for(size_t i=0;i<src->row;i++) {
         for(size_t j=0;j<src->col;j++) {
-            printf("%g\t", src->data[i*src->col+j]);
+            printf("%.4g\t", src->data[i*src->col+j]);
         }
         putchar('\n');
     }
@@ -141,4 +141,33 @@ double ma_det(ma_mat *src) {
     for(size_t i=0;i<src->row;i++)
         total *= src->data[i*src->col+i];
     return total;
+}
+
+void ma_lu(ma_mat *src, ma_mat *L, ma_mat *U) { //src也是U, ret是L
+    if(src->col!=src->row)
+        return ;
+    size_t rank = src->col;
+    if(!L->data) {
+        L->data = calloc(rank*rank, sizeof(double));
+        L->col = L->row = rank;
+        for(size_t j=0;j<rank;j++)
+            L->data[j*rank+j] = 1;
+    }
+    if(!U->data) {
+        U->data = calloc(rank*rank, sizeof(double));
+        U->col = U->row = rank;
+        for(size_t j=0;j<rank;j++)
+            for(size_t k=0;k<rank;k++)
+                U->data[j*rank+k] = src->data[j*rank+k];
+    }
+    for(size_t r=1;r<rank;r++) {
+        for(size_t i=r;i<rank;i++)
+            L->data[i*rank+r-1] = U->data[i*rank+r-1]/U->data[(r-1)*rank+r-1];
+        for(size_t i=r;i<rank;i++) {
+            for(size_t j=r;j<rank;j++)
+                U->data[i*rank+j] -= U->data[(r-1)*rank+j]*L->data[i*rank+r-1];
+            U->data[i*rank+r-1] = 0;
+        }
+    }
+    return ;
 }
