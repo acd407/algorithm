@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <math.h>
 
 typedef struct {
@@ -91,11 +92,17 @@ void ma_tms_col(ma_mat *src, size_t c1, double n) {
     }
 }
 
+ma_mat *ma_cpy(ma_mat *src) {
+    ma_mat *ret = malloc(sizeof(ma_mat));
+    ret->row = src->row;
+    ret->col = src->col;
+    ret->data = malloc(sizeof(double)*ret->row*ret->col);
+    memcpy(ret->data, src->data, sizeof(double)*ret->row*ret->col);
+    return ret;
+}
+
+//仅接受方阵
 void ma_utm(ma_mat *src) {
-    if(src->row != src->col) {
-        puts("col != row");
-        exit(__LINE__);
-    }
     size_t order = src->row;
     for(size_t j=0;j<order-1;j++) {
         if(src->data[j*order+j]==0) { //错误处理
@@ -136,10 +143,11 @@ double ma_det(ma_mat *src) {
         puts("col != row");
         exit(__LINE__);
     }
-    ma_utm(src);
+    ma_mat *cpy = ma_cpy(src);
+    ma_utm(cpy);
     double total = 1;
-    for(size_t i=0;i<src->row;i++)
-        total *= src->data[i*src->col+i];
+    for(size_t i=0;i<cpy->row;i++)
+        total *= cpy->data[i*cpy->col+i];
     return total;
 }
 
