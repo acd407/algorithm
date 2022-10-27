@@ -143,7 +143,9 @@ double ma_det(ma_mat *src) {
     return total;
 }
 
-void ma_lu(ma_mat *src, ma_mat *L, ma_mat *U) { //src也是U, ret是L
+// L->data 和 U->data 需要是NULL, 否则自己管理它们的初始化
+// 禁止传野指针, (比如 malloc 初始化的)
+void ma_lu(ma_mat *src, ma_mat *L, ma_mat *U) {
     if(src->col!=src->row)
         return ;
     size_t rank = src->col;

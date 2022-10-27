@@ -13,11 +13,11 @@ int main() {
     ma_mat mtx = {4, 4, mat};
     ma_pnt(&mtx);
     putchar('\n');
-    ma_mat *L = malloc(sizeof(ma_mat));
-    ma_mat *U = malloc(sizeof(ma_mat));
-    ma_lu(&mtx, L, U);
-    ma_pnt(L);
+    ma_mat L = {0, 0, 0};
+    ma_mat U = {0, 0, 0};
+    ma_lu(&mtx, &L, &U);
+    ma_pnt(&L);
     putchar('\n');
-    ma_pnt(U);
+    ma_pnt(&U);
     return 0;
 }
