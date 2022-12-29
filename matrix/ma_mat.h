@@ -4,11 +4,37 @@
 #include <string.h>
 #include <math.h>
 
+#define TOLERANCE 1e-6
+
 typedef struct {
     size_t row;
     size_t col;
     double *data;
 }ma_mat;
+
+// functions declared here
+ma_mat *ma_new(size_t row, size_t col);
+ma_mat *ma_new_m(size_t row, size_t col);
+ma_mat *ma_cpy(ma_mat *src);
+void ma_swp(ma_mat *src, size_t xr, size_t xc, size_t yr, size_t yc);
+void ma_swp_row(ma_mat *src, size_t r1, size_t r2);
+void ma_swp_col(ma_mat *src, size_t c1, size_t c2);
+void ma_add_row(ma_mat *src, size_t r1, size_t r2, double n);
+void ma_add_col(ma_mat *src, size_t c1, size_t c2, double n);
+void ma_tms_row(ma_mat *src, size_t r1, double n);
+void ma_tms_col(ma_mat *src, size_t c1, double n);
+void ma_tsp(ma_mat *src);
+void ma_pnt(ma_mat *src);
+void ma_utm(ma_mat *src);
+double ma_det(ma_mat *src);
+void ma_lu(ma_mat *src, ma_mat *L, ma_mat *U);
+// unrealized functions
+ma_mat *ma_pls(ma_mat *A, ma_mat *B);
+ma_mat *ma_tms(ma_mat *A, ma_mat *B);
+void ma_add(ma_mat *dest, ma_mat *src);
+void ma_mul(ma_mat *dest, ma_mat *src);
+void ma_inv(ma_mat *src);
+// end
 
 void ma_tsp(ma_mat *src) {
     double tmp;
@@ -63,7 +89,7 @@ void ma_swp_col(ma_mat *src, size_t c1, size_t c2) {
 void ma_add_row(ma_mat *src, size_t r1, size_t r2, double n) {
     for(size_t i=0;i<src->col;i++) {
         src->data[r1*src->col+i] += n * src->data[r2*src->col+i];
-        if(fabs(src->data[r1*src->col+i])<1e-5)
+        if(fabs(src->data[r1*src->col+i])<TOLERANCE)
             src->data[r1*src->col+i] = 0;
     }
 }
@@ -71,7 +97,7 @@ void ma_add_row(ma_mat *src, size_t r1, size_t r2, double n) {
 void ma_add_col(ma_mat *src, size_t c1, size_t c2, double n) {
     for(size_t i=0;i<src->col;i++) {
         src->data[i*src->col+c1] += n * src->data[i*src->col+c2];
-        if(fabs(src->data[i*src->col+c1])<1e-5)
+        if(fabs(src->data[i*src->col+c1])<TOLERANCE)
             src->data[i*src->col+c1] = 0;
     }
 }
@@ -79,7 +105,7 @@ void ma_add_col(ma_mat *src, size_t c1, size_t c2, double n) {
 void ma_tms_row(ma_mat *src, size_t r1, double n) {
     for(size_t i=0;i<src->col;i++) {
         src->data[r1*src->col+i] *= n;
-        if(fabs(src->data[r1*src->col+i])<1e-5)
+        if(fabs(src->data[r1*src->col+i])<TOLERANCE)
             src->data[r1*src->col+i] = 0;
     }
 }
@@ -87,16 +113,29 @@ void ma_tms_row(ma_mat *src, size_t r1, double n) {
 void ma_tms_col(ma_mat *src, size_t c1, double n) {
     for(size_t i=0;i<src->col;i++) {
         src->data[i*src->col+c1] *= n;
-        if(fabs(src->data[i*src->col+c1])<1e-5)
+        if(fabs(src->data[i*src->col+c1])<TOLERANCE)
             src->data[i*src->col+c1] = 0;
     }
 }
 
-ma_mat *ma_cpy(ma_mat *src) {
+ma_mat *ma_new(size_t row, size_t col) {
     ma_mat *ret = malloc(sizeof(ma_mat));
-    ret->row = src->row;
-    ret->col = src->col;
-    ret->data = malloc(sizeof(double)*ret->row*ret->col);
+    ret->row = row;
+    ret->col = col;
+    ret->data = calloc(ret->row*ret->col, sizeof(double));
+    return ret;
+}
+
+ma_mat *ma_new_m(size_t row, size_t col) {
+    ma_mat *ret = malloc(sizeof(ma_mat));
+    ret->row = row;
+    ret->col = col;
+    ret->data = malloc(ret->row*ret->col*sizeof(double));
+    return ret;
+}
+
+ma_mat *ma_cpy(ma_mat *src) {
+    ma_mat *ret = ma_new_m(src->row, src->col);
     memcpy(ret->data, src->data, sizeof(double)*ret->row*ret->col);
     return ret;
 }
