@@ -1,21 +1,17 @@
 #include <stdio.h>
 #include <vector>
+#include <stdint.h>
 using std::vector;
-int main()
-{
-    vector<long long> prime;
-    vector<long long>::iterator it;
-    long long i;   
-    prime.push_back(2);
-    for(i=2;i<__LONG_LONG_MAX__&&prime.size()<10001;i++)
-    {
-        for(it=prime.begin();it!=prime.end();it++)
-        {
-            if(i%*it==0)
-                goto loop;
-        }
-        prime.push_back(i);  
-        loop:;
-    }         
-    printf("%lld",*(prime.end()-1));
+int main() {
+    vector<uint64_t> prime;
+    size_t prime_len = 0;
+    for (uint64_t i = 2; prime_len < 10001; i++) {
+        for (auto& item : prime)
+            if (i % item == 0)
+                goto cycle;
+        prime.push_back (i);
+        prime_len++;
+    cycle:;
+    }
+    printf ("%lld", *(prime.end() - 1));
 }
