@@ -22,44 +22,39 @@ int table[20][20] =
     {20,73,35,29,78,31,90, 1,74,31,49,71,48,86,81,16,23,57, 5,54},
     { 1,70,54,71,83,51,54,69,16,92,33,48,61,43,52, 1,89,19,67,48}
 };
-int main()
-{
+int main() {
     long long max = 0;
-    for(int i=0;i<20;i++)
-        for(int j=0;j<17;j++)
-        {
+    for (int i = 0; i < 20; i++)
+        for (int j = 0; j < 17; j++) {
             long long mul = 1;
-            for(int k=j;k<j+4;k++)
+            for (int k = j; k < j + 4; k++)
                 mul *= table[i][k];
-            if(mul>max)
+            if (mul > max)
                 max = mul;
         }
-    for(int i=0;i<17;i++)
-        for(int j=0;j<20;j++)
-        {
+    for (int i = 0; i < 17; i++)
+        for (int j = 0; j < 20; j++) {
             long long mul = 1;
-            for(int k=i;k<i+4;k++)
+            for (int k = i; k < i + 4; k++)
                 mul *= table[k][j];
-            if(mul>max)
+            if (mul > max)
                 max = mul;
         }
-    for(int i=0;i<17;i++)
-        for(int j=0;j<17;j++)
-        {
+    for (int i = 0; i < 17; i++)
+        for (int j = 0; j < 17; j++) {
             long long mul = 1;
-            for(int k=0;k<4;k++)
-                mul *= table[i+k][j+k];
-            if(mul>max)
+            for (int k = 0; k < 4; k++)
+                mul *= table[i + k][j + k];
+            if (mul > max)
                 max = mul;
         }
-    for(int i=0;i<17;i++)
-        for(int j=3;j<20;j++)
-        {
+    for (int i = 0; i < 17; i++)
+        for (int j = 3; j < 20; j++) {
             long long mul = 1;
-            for(int k=0;k<4;k++)
-                mul *= table[i+k][j-k];
-            if(mul>max)
+            for (int k = 0; k < 4; k++)
+                mul *= table[i + k][j - k];
+            if (mul > max)
                 max = mul;
         }
-    printf("%lld",max);
+    printf ("%lld", max);
 }

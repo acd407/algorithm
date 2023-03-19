@@ -8,9 +8,9 @@ public class Prime {
         while (primeTable.Count < 1e4 + 1) {
             foreach (var elem in primeTable)
                 if (i % elem == 0)
-                    goto cycle;
+                    goto loop;
             primeTable.Add(i);
-        cycle:
+        loop:
             i++;
         }
         Console.WriteLine(primeTable[primeTable.Count-1]);

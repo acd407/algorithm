@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 class Program {
     public static void Main() {
@@ -10,16 +11,12 @@ class Program {
                 if (num % i == 0) {
                     factors.Add(i);
                     num /= i;
-                    goto cycle;
+                    goto loop;
                 }
             factors.Add(num);
             break;
-        cycle:;
+        loop:;
         }
-        ulong max = 0;
-        foreach (var i in factors)
-            if (i > max)
-                max = i;
-        Console.WriteLine(max);
+        Console.WriteLine(factors.Max());
     }
 }

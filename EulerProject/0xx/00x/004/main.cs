@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 class Program {
     static void Main() {
@@ -11,15 +12,11 @@ class Program {
                 var len = str.Length;
                 for (var k = 0; k < len / 2; k++) {
                     if (str[k] != str[len - 1 - k])
-                        goto cycle;
+                        goto loop;
                 }
                 tab.Add(num);
-            cycle:;
+            loop:;
             }
-        int max = 0;
-        foreach (var i in tab)
-            if (i > max)
-                max = i;
-        Console.WriteLine(max);
+        Console.WriteLine(tab.Max());
     }
 }
