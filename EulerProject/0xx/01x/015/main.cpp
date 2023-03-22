@@ -1,34 +1,27 @@
 #include <cstdio>
-#include <vector>
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 using namespace std;
-double nCr(double n,double r)
-{
-    if(n<r)
-    {
-        cerr<<"'n<r'!"<<endl;
-        exit(EXIT_FAILURE);
+double nCr (double n, double r) {
+    if (n < r) {
+        cerr << "'n<r'!" << endl;
+        exit (EXIT_FAILURE);
     }
     double ret = 1;
-    while(r>0)
-        ret *= n--/r--;
+    while (r > 0)
+        ret *= n-- / r--;
     return ret;
 }
-double nPr(double n,double r)
-{
-    if(n<r)
-    {
-        cerr<<"'n<r'!"<<endl;
-        exit(EXIT_FAILURE);
+double nPr (double n, double r) {
+    if (n < r) {
+        cerr << "'n<r'!" << endl;
+        exit (EXIT_FAILURE);
     }
     double ret = 1;
-    while(r-->0)
+    while (r-- > 0)
         ret *= n--;
     return ret;
 }
 
-int main()
-{
-    cout<<std::fixed<<nCr(40,20);
-}
+int main() { cout << uint64_t(nCr (40, 20)); }

@@ -1,42 +1,30 @@
 #include <iostream>
 #include <string>
 using namespace std;
-string number;//逆序存储
-int length = 1;
-void mul2()
-{
-    string::iterator it;
-    int up = 0;
-    for(it=number.begin();it!=number.end();it++)
-    {
-        *it -= 48;
-        *it *= 2;
-        *it += up;
-        if(*it>10)
-        {
-            up = *it/10;
-            *it %= 10;
+string number; // 逆序存储
+
+void mul2() {
+    char up = 0;
+    for (auto& var : number) {
+        var -= 48;
+        var *= 2;
+        var += up;
+        up = 0;
+        if (var > 9) {
+            up += var / 10;
+            var %= 10;
         }
-        *it += 48;
+        var += 48;
     }
-    if(up!=0)
-    {
-        number.push_back(up);
-        length++;
-    }
+    if (up != 0)
+        number.push_back (up + '0');
 }
-int main()
-{   
-    number.push_back('2');
-    for(int i=0;i<1000-1;i++)
+int main() {
+    number.push_back ('1');
+    for (int i = 0; i < 1000; i++)
         mul2();
     long long sum = 0;
-    for(int i=0;i<length;i++)
-        sum += number[i]-48;
-    cout<<sum<<endl;
-    sum = 0;
-    string::iterator it;
-    for(it=number.begin();it!=number.end();it++)
-        sum += *it-48;
-    cout<<sum<<endl;
+    for (auto var : number)
+        sum += var - 48;
+    cout << sum << endl;
 }
