@@ -1,140 +1,135 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
-typedef unsigned long long u64;
-typedef unsigned int u32;
-typedef unsigned short u16;
-class BN//reverse storage
-{
-public:
-    u16 length = 0;
-    u32 *bits;
-    void print()
-    {
-        u16 i = length;
-        while(i)
-            printf("%08x",bits[--i]);
-        printf("\n");
-    }
-    BN(){};
-    BN(int l,u32 *ptr)
-    {
-        length = l;
-        bits = ptr;
-    }
-    void add(BN);
-    void mul(BN);
+#include <stdint.h>
+#include <stdexcept>
+#include <initializer_list>
+#include <vector>
+
+class BN { // reverse storage
+    public:
+        size_t length = 0;
+        uint32_t* bits;
+        void print() {
+            size_t i = length;
+            while (i)
+                printf ("%08x", bits[--i]);
+            printf ("\n");
+        }
+        BN() {};
+        BN(char* s) {
+            uint32_t n = atoll(s);
+            if (n <= 0) {
+                throw std::invalid_argument("input argument must be a positive number string, and less than UINT_MAX");
+            }
+            bits = new uint32_t{n};
+            length = 1;
+        }
+        BN(std::initializer_list<uint32_t> l) {
+            length = l.size();
+            bits = (*new std::vector<uint32_t> {l}).data();
+        }
+        BN (int l, uint32_t* ptr): length(l), bits(ptr) {}
+        void add (BN);
+        void mul (BN);
 };
 
-void BN::add(BN source)
-{
-    u32 *_ = (u32 *)realloc(bits,__max(length,source.length)+1);
-    if(bits==0)
+void BN::add (BN source) {
+    uint32_t* _ =
+        (uint32_t*) realloc (bits, __max (length, source.length) + 1);
+    if (bits == 0)
         bits = _;
-    for(int i=length;i<__max(length,source.length)+1;i++)
+    for (size_t i = length; i < __max (length, source.length) + 1; i++)
         bits[i] = 0;
-    for(u16 i=0;i<__max(length,source.length);i++)
-    {
-        u64 buff = (u64)bits[i]+source.bits[i];
-        if(buff>UINT_MAX)
-        {
-            u32 *ptr = (u32 *)&buff;
+    for (size_t i = 0; i < __max (length, source.length); i++) {
+        uint64_t buff = (uint64_t) bits[i] + source.bits[i];
+        if (buff > UINT_MAX) {
+            uint32_t* ptr = (uint32_t*) &buff;
             bits[i] = *ptr;
-            bits[i+1] += *(ptr+1);
-        }
-        else
+            bits[i + 1] += *(ptr + 1);
+        } else
             bits[i] += source.bits[i];
     }
-    if(bits[__max(length,source.length)]!=0)
-        length = __max(length,source.length)+1;
+    if (bits[__max (length, source.length)] != 0)
+        length = __max (length, source.length) + 1;
     else
-        length = __max(length,source.length);
+        length = __max (length, source.length);
 }
-void operator += (BN &target,BN source)
-{
-    target.add(source);
+void operator+= (BN& target, BN source) {
+    target.add (source);
 }
 
-BN plus(BN target,BN source)
-{
-    u32 *buff = (u32 *)malloc(sizeof(u32)*target.length);
-    for(int i=0;i<target.length;i++)
+BN plus (BN target, BN source) {
+    uint32_t* buff = (uint32_t*) malloc (sizeof (uint32_t) * target.length);
+    for (size_t i = 0; i < target.length; i++)
         buff[i] = target.bits[i];
-    target.add(source);
+    target.add (source);
     BN ret;
     ret.length = target.length;
     ret.bits = target.bits;
     target.bits = buff;
     return ret;
 }
-BN operator + (BN target,BN source)
-{
-    return plus(target,source);
+BN operator+ (BN target, BN source) {
+    return plus (target, source);
 }
 
-void BN::mul(BN source)
-{
-    //64位缓冲区
-    u64 *buff = (u64 *)calloc(length+source.length,sizeof(u64));
-    //主计算
-    for(u16 i=0;i<length;i++)
-        for(u16 j=0;j<source.length;j++)
-        {
-            buff[i+j] += (u64)bits[i] * source.bits[j];
-            if(buff[i+j]>UINT_MAX)//判断进位
-            {
-                //用指针取高32位
-                u32 *ptr = (u32 *)&(buff[i+j]);
-                buff[i+j+1] += *++ptr;//ptr指向低位，ptr+1指向高位
+void BN::mul (BN source) {
+    // 64位缓冲区
+    uint64_t* buff = new uint64_t[length + source.length]{0};
+    // 主计算
+    for (size_t i = 0; i < length; i++)
+        for (size_t j = 0; j < source.length; j++) {
+            buff[i + j] += (uint64_t) bits[i] * source.bits[j];
+            if (buff[i + j] > UINT_MAX) { // 判断进位
+                // 用指针取高32位
+                uint32_t* ptr = (uint32_t*) & (buff[i + j]);
+                buff[i + j + 1] += *++ptr; // ptr指向低位，ptr+1指向高位
                 *ptr = 0;
             }
         }
-    //检测大小
-    u16 i = 0;
-    while(i<length+source.length&&buff[i])
+    // 检测大小
+    size_t i = 0;
+    while (i < length + source.length && buff[i])
         i++;
     length = i;
-    //重新分配内存
-    u32 *_ = (u32 *)realloc(bits,i*sizeof(u32));
-    if(bits == 0)
+    // 重新分配内存
+    uint32_t* _ = (uint32_t*) realloc (bits, i * sizeof (uint32_t));
+    if (bits == 0)
         bits = _;
-    //拷贝  
-    for(int j=0;j<i;j++)
-        bits[j] = (u32)buff[j];
-    //销毁
-    free(buff);
+    // 拷贝
+    for (size_t j = 0; j < i; j++)
+        bits[j] = (uint32_t) buff[j];
+    // 销毁
+    delete[] buff;
 }
-void operator *= (BN &target,BN source)
-{
-    target.mul(source);
+void operator*= (BN& target, BN source) {
+    target.mul (source);
 }
 
-BN times(BN target,BN source)
-{
-    u64 *buff = (u64 *)calloc(target.length+source.length,sizeof(u64));
-    for(u16 i=0;i<target.length;i++)
-        for(u16 j=0;j<source.length;j++)
-        {
-            buff[i+j] += (u64)target.bits[i] * source.bits[j];
-            if(buff[i+j]>UINT_MAX)
-            {
-                u32 *ptr = (u32 *)&(buff[i+j]);//higher 32 bits
-                buff[i+j+1] += *++ptr;
+BN times (BN target, BN source) {
+    uint64_t* buff =
+        (uint64_t*) calloc (target.length + source.length, sizeof (uint64_t));
+    for (size_t i = 0; i < target.length; i++)
+        for (size_t j = 0; j < source.length; j++) {
+            buff[i + j] += (uint64_t) target.bits[i] * source.bits[j];
+            if (buff[i + j] > UINT_MAX) {
+                uint32_t* ptr = (uint32_t*) & (buff[i + j]); // higher 32 bits
+                buff[i + j + 1] += *++ptr;
                 *ptr = 0;
             }
         }
-    u16 i = 0;
-    while(i<target.length+source.length&&buff[i])
+    size_t i = 0;
+    while (i < target.length + source.length && buff[i])
         i++;
     BN ret;
-    ret.bits = (u32 *)malloc(i*sizeof(u32));
+    ret.bits = (uint32_t*) malloc (i * sizeof (uint32_t));
     ret.length = i;
-    for(int j=0;j<i;j++)
-        ret.bits[j] = (u32)buff[j];
+    for (size_t j = 0; j < i; j++)
+        ret.bits[j] = (uint32_t) buff[j];
     return ret;
-    free(buff);
+    free (buff);
 }
-BN operator * (BN target,BN source)
-{
-    return times(target,source);
+BN operator* (BN target, BN source) {
+    return times (target, source);
 }

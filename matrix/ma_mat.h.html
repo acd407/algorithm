@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ma_mat.h</title>
+<style type="text/css">
+/* highlight theme: vscode darkplus */
+body.hl	{ background-color:#1e1e1e; }
+pre.hl	{ color:#9cdcfe; background-color:#1e1e1e; font-size:12pt; font-family:'Source Code Pro'; white-space: pre-wrap; }
+.hl.num { color:#b5cea8; }
+.hl.esc { color:#fd7ba7; }
+.hl.sng { color:#d7ba7d; }
+.hl.pps { color:#d7ba7d; }
+.hl.slc { color:#6a9955; }
+.hl.com { color:#6a9955; }
+.hl.ppc { color:#007acc; }
+.hl.opt { color:#d4d4d4; }
+.hl.ipl { color:#569cd6; }
+.hl.lin { color:#808080; user-select: none; }
+.hl.hvr { cursor:help; }
+.hl.erm { color:#ff0000; font-weight:bold; border:solid 1px red; margin-left: 3em; }
+.hl.err { color:#ff0000; font-weight:bold; }
+.hl.kwa { color:#c58ec0; }
+.hl.kwb { color:#569cd6; }
+.hl.kwc { color:#569cd6; }
+.hl.kwd { color:#dcdcaa; }
+.hl.kwe { color:#b9a66f; }
+.hl.kwf { color:#aaaaaa; }
+.hl.sta { color:#569cd6; }
+.hl.stb { color:#c58ec0; }
+.hl.stc { color:#dcdcaa; }
+.hl.std { color:#c58ec0; }
+.hl.ste { color:#aaaaaa; }
+.hl.stf { color:#b9a66f; }
+.hl.stg { color:#b9a66f; }
+.hl.sth { color:#dcdcaa; }
+.hl.sti { color:#dcdcaa; }
+.hl.stj { color:#c58ec0; }
+.hl.stk { color:#b5cea8; }
+.hl.stl { color:#d7ba7d; }
+.hl.stm { color:#d4d4d4; }
+</style>
+</head>
+<body class="hl">
+<pre class="hl"><span class="hl lin"> 1 </span><span class="hl ppc">#include &lt;stdio.h&gt;</span>
+<span class="hl lin"> 2 </span><span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<span class="hl lin"> 3 </span><span class="hl ppc">#include &lt;stdbool.h&gt;</span>
+<span class="hl lin"> 4 </span><span class="hl ppc">#include &lt;string.h&gt;</span>
+<span class="hl lin"> 5 </span><span class="hl ppc">#include &lt;math.h&gt;</span>
+<span class="hl lin"> 6 </span>
+<span class="hl lin"> 7 </span><span class="hl ppc">#define TOLERANCE 1e-6</span>
+<span class="hl lin"> 8 </span>
+<span class="hl lin"> 9 </span><span class="hl kwd">typedef</span> <span class="hl kwb">struct</span> <span class="hl opt">{</span>
+<span class="hl lin">10 </span>    <span class="hl kwb">size_t</span> row<span class="hl opt">;</span>
+<span class="hl lin">11 </span>    <span class="hl kwb">size_t</span> col<span class="hl opt">;</span>
+<span class="hl lin">12 </span>    <span class="hl kwb">double</span> <span class="hl opt">*</span>data<span class="hl opt">;</span>
+<span class="hl lin">13 </span><span class="hl opt">}</span>ma_mat<span class="hl opt">;</span>
+<span class="hl lin">14 </span>
+<span class="hl lin">15 </span><span class="hl slc">// functions declared here</span>
+<span class="hl lin">16 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_new</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> row<span class="hl opt">,</span> <span class="hl kwb">size_t</span> col<span class="hl opt">);</span>
+<span class="hl lin">17 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_new_m</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> row<span class="hl opt">,</span> <span class="hl kwb">size_t</span> col<span class="hl opt">);</span>
+<span class="hl lin">18 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_cpy</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">19 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_swp</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> xr<span class="hl opt">,</span> <span class="hl kwb">size_t</span> xc<span class="hl opt">,</span> <span class="hl kwb">size_t</span> yr<span class="hl opt">,</span> <span class="hl kwb">size_t</span> yc<span class="hl opt">);</span>
+<span class="hl lin">20 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_swp_row</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r2<span class="hl opt">);</span>
+<span class="hl lin">21 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_swp_col</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c2<span class="hl opt">);</span>
+<span class="hl lin">22 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_add_row</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r2<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">);</span>
+<span class="hl lin">23 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_add_col</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c2<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">);</span>
+<span class="hl lin">24 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_tms_row</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r1<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">);</span>
+<span class="hl lin">25 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_tms_col</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c1<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">);</span>
+<span class="hl lin">26 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_tsp</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">27 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_pnt</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">28 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_utm</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">29 </span><span class="hl kwb">double</span> <span class="hl kwd">ma_det</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">30 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_lu</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>L<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>U<span class="hl opt">);</span>
+<span class="hl lin">31 </span><span class="hl slc">// unrealized functions</span>
+<span class="hl lin">32 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_pls</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>A<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>B<span class="hl opt">);</span>
+<span class="hl lin">33 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_tms</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>A<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>B<span class="hl opt">);</span>
+<span class="hl lin">34 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_add</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>dest<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">35 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_mul</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>dest<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">36 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_inv</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">);</span>
+<span class="hl lin">37 </span><span class="hl slc">// end</span>
+<span class="hl lin">38 </span>
+<span class="hl lin">39 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_tsp</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">) {</span>
+<span class="hl lin">40 </span>    <span class="hl kwb">double</span> tmp<span class="hl opt">;</span>
+<span class="hl lin">41 </span>    <span class="hl kwa">if</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>row <span class="hl opt">==</span> src<span class="hl opt">-&gt;</span>col<span class="hl opt">) {</span>
+<span class="hl lin">42 </span>        <span class="hl kwb">size_t</span> size <span class="hl opt">=</span> src<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>
+<span class="hl lin">43 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>size<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">44 </span>            <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span>i<span class="hl opt">+</span><span class="hl num">1</span><span class="hl opt">;</span>j<span class="hl opt">&lt;</span>size<span class="hl opt">;</span>j<span class="hl opt">++) {</span>
+<span class="hl lin">45 </span>                tmp <span class="hl opt">=</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>size<span class="hl opt">+</span>j<span class="hl opt">];</span>
+<span class="hl lin">46 </span>                src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>size<span class="hl opt">+</span>j<span class="hl opt">] =</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>size<span class="hl opt">+</span>i<span class="hl opt">];</span>
+<span class="hl lin">47 </span>                src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>size<span class="hl opt">+</span>i<span class="hl opt">] =</span> tmp<span class="hl opt">;</span>
+<span class="hl lin">48 </span>            <span class="hl opt">}</span>
+<span class="hl lin">49 </span>    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+<span class="hl lin">50 </span>        <span class="hl kwb">double</span> <span class="hl opt">*</span>mat <span class="hl opt">= (</span><span class="hl kwb">double</span> <span class="hl opt">*)</span><span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">)*</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">);</span>
+<span class="hl lin">51 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">52 </span>            <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>j<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>j<span class="hl opt">++)</span>
+<span class="hl lin">53 </span>                mat<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>j<span class="hl opt">] =</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>j<span class="hl opt">];</span>
+<span class="hl lin">54 </span>        tmp <span class="hl opt">=</span> src<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>
+<span class="hl lin">55 </span>        src<span class="hl opt">-&gt;</span>row <span class="hl opt">=</span> src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>
+<span class="hl lin">56 </span>        src<span class="hl opt">-&gt;</span>col <span class="hl opt">=</span> tmp<span class="hl opt">;</span>
+<span class="hl lin">57 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">58 </span>            <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>j<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>j<span class="hl opt">++)</span>
+<span class="hl lin">59 </span>                src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>j<span class="hl opt">] =</span> mat<span class="hl opt">[</span>j<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">+</span>i<span class="hl opt">];</span>
+<span class="hl lin">60 </span>        <span class="hl kwd">free</span><span class="hl opt">(</span>mat<span class="hl opt">);</span>
+<span class="hl lin">61 </span>    <span class="hl opt">}</span>
+<span class="hl lin">62 </span><span class="hl opt">}</span>
+<span class="hl lin">63 </span>
+<span class="hl lin">64 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_pnt</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">) {</span>
+<span class="hl lin">65 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>i<span class="hl opt">++) {</span>
+<span class="hl lin">66 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>j<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>j<span class="hl opt">++) {</span>
+<span class="hl lin">67 </span>            <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl sng">&quot;%.4g</span><span class="hl esc">\t</span><span class="hl sng">&quot;</span><span class="hl opt">,</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>j<span class="hl opt">]);</span>
+<span class="hl lin">68 </span>        <span class="hl opt">}</span>
+<span class="hl lin">69 </span>        <span class="hl kwd">putchar</span><span class="hl opt">(</span><span class="hl sng">&#39;</span><span class="hl esc">\n</span><span class="hl sng">&#39;</span><span class="hl opt">);</span>
+<span class="hl lin">70 </span>    <span class="hl opt">}</span>
+<span class="hl lin">71 </span><span class="hl opt">}</span>
+<span class="hl lin">72 </span>
+<span class="hl lin">73 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_swp</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> xr<span class="hl opt">,</span> <span class="hl kwb">size_t</span> xc<span class="hl opt">,</span> <span class="hl kwb">size_t</span> yr<span class="hl opt">,</span> <span class="hl kwb">size_t</span> yc<span class="hl opt">) {</span>
+<span class="hl lin">74 </span>    <span class="hl kwb">double</span> tmp <span class="hl opt">=</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>xr<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>xc<span class="hl opt">];</span>
+<span class="hl lin">75 </span>    src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>xr<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>xc<span class="hl opt">] =</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>yr<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>yc<span class="hl opt">];</span>
+<span class="hl lin">76 </span>    src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>yr<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>yc<span class="hl opt">] =</span> tmp<span class="hl opt">;</span>
+<span class="hl lin">77 </span><span class="hl opt">}</span>
+<span class="hl lin">78 </span>
+<span class="hl lin">79 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_swp_row</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r2<span class="hl opt">) {</span>
+<span class="hl lin">80 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">81 </span>        <span class="hl kwd">ma_swp</span><span class="hl opt">(</span>src<span class="hl opt">,</span> r1<span class="hl opt">,</span> i<span class="hl opt">,</span> r2<span class="hl opt">,</span> i<span class="hl opt">);</span>
+<span class="hl lin">82 </span><span class="hl opt">}</span>
+<span class="hl lin">83 </span>
+<span class="hl lin">84 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_swp_col</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c2<span class="hl opt">) {</span>
+<span class="hl lin">85 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">86 </span>        <span class="hl kwd">ma_swp</span><span class="hl opt">(</span>src<span class="hl opt">,</span> i<span class="hl opt">,</span> c1<span class="hl opt">,</span> i<span class="hl opt">,</span> c2<span class="hl opt">);</span>
+<span class="hl lin">87 </span><span class="hl opt">}</span>
+<span class="hl lin">88 </span>
+<span class="hl lin">89 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_add_row</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r2<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">) {</span>
+<span class="hl lin">90 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>i<span class="hl opt">++) {</span>
+<span class="hl lin">91 </span>        src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>r1<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">] +=</span> n <span class="hl opt">*</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>r2<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">];</span>
+<span class="hl lin">92 </span>        <span class="hl kwa">if</span><span class="hl opt">(</span><span class="hl kwd">fabs</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>r1<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">])&lt;</span>TOLERANCE<span class="hl opt">)</span>
+<span class="hl lin">93 </span>            src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>r1<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl lin">94 </span>    <span class="hl opt">}</span>
+<span class="hl lin">95 </span><span class="hl opt">}</span>
+<span class="hl lin">96 </span>
+<span class="hl lin">97 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_add_col</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c1<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c2<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">) {</span>
+<span class="hl lin">98 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>i<span class="hl opt">++) {</span>
+<span class="hl lin">99 </span>        src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>c1<span class="hl opt">] +=</span> n <span class="hl opt">*</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>c2<span class="hl opt">];</span>
+<span class="hl lin">100 </span>        <span class="hl kwa">if</span><span class="hl opt">(</span><span class="hl kwd">fabs</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>c1<span class="hl opt">])&lt;</span>TOLERANCE<span class="hl opt">)</span>
+<span class="hl lin">101 </span>            src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>c1<span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl lin">102 </span>    <span class="hl opt">}</span>
+<span class="hl lin">103 </span><span class="hl opt">}</span>
+<span class="hl lin">104 </span>
+<span class="hl lin">105 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_tms_row</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> r1<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">) {</span>
+<span class="hl lin">106 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>i<span class="hl opt">++) {</span>
+<span class="hl lin">107 </span>        src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>r1<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">] *=</span> n<span class="hl opt">;</span>
+<span class="hl lin">108 </span>        <span class="hl kwa">if</span><span class="hl opt">(</span><span class="hl kwd">fabs</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>r1<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">])&lt;</span>TOLERANCE<span class="hl opt">)</span>
+<span class="hl lin">109 </span>            src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>r1<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl lin">110 </span>    <span class="hl opt">}</span>
+<span class="hl lin">111 </span><span class="hl opt">}</span>
+<span class="hl lin">112 </span>
+<span class="hl lin">113 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_tms_col</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> <span class="hl kwb">size_t</span> c1<span class="hl opt">,</span> <span class="hl kwb">double</span> n<span class="hl opt">) {</span>
+<span class="hl lin">114 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>i<span class="hl opt">++) {</span>
+<span class="hl lin">115 </span>        src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>c1<span class="hl opt">] *=</span> n<span class="hl opt">;</span>
+<span class="hl lin">116 </span>        <span class="hl kwa">if</span><span class="hl opt">(</span><span class="hl kwd">fabs</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>c1<span class="hl opt">])&lt;</span>TOLERANCE<span class="hl opt">)</span>
+<span class="hl lin">117 </span>            src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>c1<span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl lin">118 </span>    <span class="hl opt">}</span>
+<span class="hl lin">119 </span><span class="hl opt">}</span>
+<span class="hl lin">120 </span>
+<span class="hl lin">121 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_new</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> row<span class="hl opt">,</span> <span class="hl kwb">size_t</span> col<span class="hl opt">) {</span>
+<span class="hl lin">122 </span>    ma_mat <span class="hl opt">*</span>ret <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span>ma_mat<span class="hl opt">));</span>
+<span class="hl lin">123 </span>    ret<span class="hl opt">-&gt;</span>row <span class="hl opt">=</span> row<span class="hl opt">;</span>
+<span class="hl lin">124 </span>    ret<span class="hl opt">-&gt;</span>col <span class="hl opt">=</span> col<span class="hl opt">;</span>
+<span class="hl lin">125 </span>    ret<span class="hl opt">-&gt;</span>data <span class="hl opt">=</span> <span class="hl kwd">calloc</span><span class="hl opt">(</span>ret<span class="hl opt">-&gt;</span>row<span class="hl opt">*</span>ret<span class="hl opt">-&gt;</span>col<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">));</span>
+<span class="hl lin">126 </span>    <span class="hl kwa">return</span> ret<span class="hl opt">;</span>
+<span class="hl lin">127 </span><span class="hl opt">}</span>
+<span class="hl lin">128 </span>
+<span class="hl lin">129 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_new_m</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> row<span class="hl opt">,</span> <span class="hl kwb">size_t</span> col<span class="hl opt">) {</span>
+<span class="hl lin">130 </span>    ma_mat <span class="hl opt">*</span>ret <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span>ma_mat<span class="hl opt">));</span>
+<span class="hl lin">131 </span>    ret<span class="hl opt">-&gt;</span>row <span class="hl opt">=</span> row<span class="hl opt">;</span>
+<span class="hl lin">132 </span>    ret<span class="hl opt">-&gt;</span>col <span class="hl opt">=</span> col<span class="hl opt">;</span>
+<span class="hl lin">133 </span>    ret<span class="hl opt">-&gt;</span>data <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span>ret<span class="hl opt">-&gt;</span>row<span class="hl opt">*</span>ret<span class="hl opt">-&gt;</span>col<span class="hl opt">*</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">));</span>
+<span class="hl lin">134 </span>    <span class="hl kwa">return</span> ret<span class="hl opt">;</span>
+<span class="hl lin">135 </span><span class="hl opt">}</span>
+<span class="hl lin">136 </span>
+<span class="hl lin">137 </span>ma_mat <span class="hl opt">*</span><span class="hl kwd">ma_cpy</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">) {</span>
+<span class="hl lin">138 </span>    ma_mat <span class="hl opt">*</span>ret <span class="hl opt">=</span> <span class="hl kwd">ma_new_m</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">,</span> src<span class="hl opt">-&gt;</span>col<span class="hl opt">);</span>
+<span class="hl lin">139 </span>    <span class="hl kwd">memcpy</span><span class="hl opt">(</span>ret<span class="hl opt">-&gt;</span>data<span class="hl opt">,</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">)*</span>ret<span class="hl opt">-&gt;</span>row<span class="hl opt">*</span>ret<span class="hl opt">-&gt;</span>col<span class="hl opt">);</span>
+<span class="hl lin">140 </span>    <span class="hl kwa">return</span> ret<span class="hl opt">;</span>
+<span class="hl lin">141 </span><span class="hl opt">}</span>
+<span class="hl lin">142 </span>
+<span class="hl lin">143 </span><span class="hl slc">//仅接受方阵</span>
+<span class="hl lin">144 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_utm</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">) {</span>
+<span class="hl lin">145 </span>    <span class="hl kwb">size_t</span> order <span class="hl opt">=</span> src<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>
+<span class="hl lin">146 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>j<span class="hl opt">&lt;</span>order<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>j<span class="hl opt">++) {</span>
+<span class="hl lin">147 </span>        <span class="hl kwa">if</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>order<span class="hl opt">+</span>j<span class="hl opt">]==</span><span class="hl num">0</span><span class="hl opt">) {</span> <span class="hl slc">//错误处理</span>
+<span class="hl lin">148 </span>            <span class="hl kwb">bool</span> error <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+<span class="hl lin">149 </span>            <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> k<span class="hl opt">=</span>j<span class="hl opt">;</span>k<span class="hl opt">&lt;</span>order<span class="hl opt">;</span>k<span class="hl opt">++) {</span> <span class="hl slc">//向下寻找</span>
+<span class="hl lin">150 </span>                <span class="hl kwa">if</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>k<span class="hl opt">*</span>order<span class="hl opt">+</span>j<span class="hl opt">]!=</span><span class="hl num">0</span><span class="hl opt">) {</span>
+<span class="hl lin">151 </span>                    <span class="hl kwd">ma_swp_row</span><span class="hl opt">(</span>src<span class="hl opt">,</span> j<span class="hl opt">,</span> k<span class="hl opt">);</span>
+<span class="hl lin">152 </span>                    <span class="hl opt">*(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">) = -*(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">);</span>
+<span class="hl lin">153 </span>                    error <span class="hl opt">=</span> <span class="hl kwa">false</span><span class="hl opt">;</span>
+<span class="hl lin">154 </span>                <span class="hl opt">}</span>
+<span class="hl lin">155 </span>            <span class="hl opt">}</span>
+<span class="hl lin">156 </span>            <span class="hl kwa">if</span><span class="hl opt">(</span>error<span class="hl opt">) {</span>
+<span class="hl lin">157 </span>                <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>order<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">158 </span>                    <span class="hl kwa">if</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>order<span class="hl opt">+</span>i<span class="hl opt">]!=</span><span class="hl num">0</span><span class="hl opt">)</span>
+<span class="hl lin">159 </span>                        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>order<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">160 </span>                            <span class="hl kwa">if</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>order<span class="hl opt">+</span>j<span class="hl opt">]!=</span><span class="hl num">0</span><span class="hl opt">)</span>
+<span class="hl lin">161 </span>                                <span class="hl kwa">goto</span> fatalerror<span class="hl opt">;</span>
+<span class="hl lin">162 </span>                <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;warning: Pivot is zero.&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">163 </span>                <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;         Can&#39;t transform to utm format.&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">164 </span>                <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;         Det is zero.&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">165 </span>                <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;         Try to transpose the matrix.&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">166 </span>                <span class="hl kwa">return</span> <span class="hl opt">;</span>
+<span class="hl lin">167 </span>            fatalerror<span class="hl opt">:</span>
+<span class="hl lin">168 </span>                <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;error: Pivot is zero.&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">169 </span>                <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;       Can&#39;t transform to utm format.&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">170 </span>                <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;       Try to transpose the matrix.</span><span class="hl esc">\n</span><span class="hl sng">the last status:</span><span class="hl esc">\n</span><span class="hl sng">&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">171 </span>                <span class="hl kwd">ma_pnt</span><span class="hl opt">(</span>src<span class="hl opt">);</span>
+<span class="hl lin">172 </span>                <span class="hl kwd">exit</span><span class="hl opt">(</span>__LINE__<span class="hl opt">);</span>
+<span class="hl lin">173 </span>            <span class="hl opt">}</span>          
+<span class="hl lin">174 </span>        <span class="hl opt">}</span>
+<span class="hl lin">175 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span>j<span class="hl opt">+</span><span class="hl num">1</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>order<span class="hl opt">;</span>i<span class="hl opt">++)</span> <span class="hl slc">//计算</span>
+<span class="hl lin">176 </span>            <span class="hl kwd">ma_add_row</span><span class="hl opt">(</span>src<span class="hl opt">,</span> i<span class="hl opt">,</span> j<span class="hl opt">, -</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>j<span class="hl opt">]/</span>src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>j<span class="hl opt">]);</span>
+<span class="hl lin">177 </span>    <span class="hl opt">}</span>
+<span class="hl lin">178 </span><span class="hl opt">}</span>
+<span class="hl lin">179 </span>
+<span class="hl lin">180 </span><span class="hl kwb">double</span> <span class="hl kwd">ma_det</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">) {</span>
+<span class="hl lin">181 </span>    <span class="hl kwa">if</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>row <span class="hl opt">!=</span> src<span class="hl opt">-&gt;</span>col<span class="hl opt">) {</span>
+<span class="hl lin">182 </span>        <span class="hl kwd">puts</span><span class="hl opt">(</span><span class="hl sng">&quot;col != row&quot;</span><span class="hl opt">);</span>
+<span class="hl lin">183 </span>        <span class="hl kwd">exit</span><span class="hl opt">(</span>__LINE__<span class="hl opt">);</span>
+<span class="hl lin">184 </span>    <span class="hl opt">}</span>
+<span class="hl lin">185 </span>    ma_mat <span class="hl opt">*</span>cpy <span class="hl opt">=</span> <span class="hl kwd">ma_cpy</span><span class="hl opt">(</span>src<span class="hl opt">);</span>
+<span class="hl lin">186 </span>    <span class="hl kwd">ma_utm</span><span class="hl opt">(</span>cpy<span class="hl opt">);</span>
+<span class="hl lin">187 </span>    <span class="hl kwb">double</span> total <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl lin">188 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>i<span class="hl opt">&lt;</span>cpy<span class="hl opt">-&gt;</span>row<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">189 </span>        total <span class="hl opt">*=</span> cpy<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>cpy<span class="hl opt">-&gt;</span>col<span class="hl opt">+</span>i<span class="hl opt">];</span>
+<span class="hl lin">190 </span>    <span class="hl kwa">return</span> total<span class="hl opt">;</span>
+<span class="hl lin">191 </span><span class="hl opt">}</span>
+<span class="hl lin">192 </span>
+<span class="hl lin">193 </span><span class="hl slc">// L-&gt;data 和 U-&gt;data 需要是NULL, 否则自己管理它们的初始化</span>
+<span class="hl lin">194 </span><span class="hl slc">// 禁止传野指针, (比如 malloc 初始化的)</span>
+<span class="hl lin">195 </span><span class="hl kwb">void</span> <span class="hl kwd">ma_lu</span><span class="hl opt">(</span>ma_mat <span class="hl opt">*</span>src<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>L<span class="hl opt">,</span> ma_mat <span class="hl opt">*</span>U<span class="hl opt">) {</span>
+<span class="hl lin">196 </span>    <span class="hl kwa">if</span><span class="hl opt">(</span>src<span class="hl opt">-&gt;</span>col<span class="hl opt">!=</span>src<span class="hl opt">-&gt;</span>row<span class="hl opt">)</span>
+<span class="hl lin">197 </span>        <span class="hl kwa">return</span> <span class="hl opt">;</span>
+<span class="hl lin">198 </span>    <span class="hl kwb">size_t</span> rank <span class="hl opt">=</span> src<span class="hl opt">-&gt;</span>col<span class="hl opt">;</span>
+<span class="hl lin">199 </span>    <span class="hl kwa">if</span><span class="hl opt">(!</span>L<span class="hl opt">-&gt;</span>data<span class="hl opt">) {</span>
+<span class="hl lin">200 </span>        L<span class="hl opt">-&gt;</span>data <span class="hl opt">=</span> <span class="hl kwd">calloc</span><span class="hl opt">(</span>rank<span class="hl opt">*</span>rank<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">));</span>
+<span class="hl lin">201 </span>        L<span class="hl opt">-&gt;</span>col <span class="hl opt">=</span> L<span class="hl opt">-&gt;</span>row <span class="hl opt">=</span> rank<span class="hl opt">;</span>
+<span class="hl lin">202 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>j<span class="hl opt">&lt;</span>rank<span class="hl opt">;</span>j<span class="hl opt">++)</span>
+<span class="hl lin">203 </span>            L<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>rank<span class="hl opt">+</span>j<span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl lin">204 </span>    <span class="hl opt">}</span>
+<span class="hl lin">205 </span>    <span class="hl kwa">if</span><span class="hl opt">(!</span>U<span class="hl opt">-&gt;</span>data<span class="hl opt">) {</span>
+<span class="hl lin">206 </span>        U<span class="hl opt">-&gt;</span>data <span class="hl opt">=</span> <span class="hl kwd">calloc</span><span class="hl opt">(</span>rank<span class="hl opt">*</span>rank<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">));</span>
+<span class="hl lin">207 </span>        U<span class="hl opt">-&gt;</span>col <span class="hl opt">=</span> U<span class="hl opt">-&gt;</span>row <span class="hl opt">=</span> rank<span class="hl opt">;</span>
+<span class="hl lin">208 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>j<span class="hl opt">&lt;</span>rank<span class="hl opt">;</span>j<span class="hl opt">++)</span>
+<span class="hl lin">209 </span>            <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> k<span class="hl opt">=</span><span class="hl num">0</span><span class="hl opt">;</span>k<span class="hl opt">&lt;</span>rank<span class="hl opt">;</span>k<span class="hl opt">++)</span>
+<span class="hl lin">210 </span>                U<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>rank<span class="hl opt">+</span>k<span class="hl opt">] =</span> src<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>j<span class="hl opt">*</span>rank<span class="hl opt">+</span>k<span class="hl opt">];</span>
+<span class="hl lin">211 </span>    <span class="hl opt">}</span>
+<span class="hl lin">212 </span>    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> r<span class="hl opt">=</span><span class="hl num">1</span><span class="hl opt">;</span>r<span class="hl opt">&lt;</span>rank<span class="hl opt">;</span>r<span class="hl opt">++) {</span>
+<span class="hl lin">213 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span>r<span class="hl opt">;</span>i<span class="hl opt">&lt;</span>rank<span class="hl opt">;</span>i<span class="hl opt">++)</span>
+<span class="hl lin">214 </span>            L<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>rank<span class="hl opt">+</span>r<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">] =</span> U<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>rank<span class="hl opt">+</span>r<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">]/</span>U<span class="hl opt">-&gt;</span>data<span class="hl opt">[(</span>r<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">)*</span>rank<span class="hl opt">+</span>r<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">];</span>
+<span class="hl lin">215 </span>        <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> i<span class="hl opt">=</span>r<span class="hl opt">;</span>i<span class="hl opt">&lt;</span>rank<span class="hl opt">;</span>i<span class="hl opt">++) {</span>
+<span class="hl lin">216 </span>            <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">size_t</span> j<span class="hl opt">=</span>r<span class="hl opt">;</span>j<span class="hl opt">&lt;</span>rank<span class="hl opt">;</span>j<span class="hl opt">++)</span>
+<span class="hl lin">217 </span>                U<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>rank<span class="hl opt">+</span>j<span class="hl opt">] -=</span> U<span class="hl opt">-&gt;</span>data<span class="hl opt">[(</span>r<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">)*</span>rank<span class="hl opt">+</span>j<span class="hl opt">]*</span>L<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>rank<span class="hl opt">+</span>r<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">];</span>
+<span class="hl lin">218 </span>            U<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>i<span class="hl opt">*</span>rank<span class="hl opt">+</span>r<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl lin">219 </span>        <span class="hl opt">}</span>
+<span class="hl lin">220 </span>    <span class="hl opt">}</span>
+<span class="hl lin">221 </span>    <span class="hl kwa">return</span> <span class="hl opt">;</span>
+<span class="hl lin">222 </span><span class="hl opt">}</span>
+</pre>
+</body>
+</html>
+<!--HTML generated by highlight 4.5, http://www.andre-simon.de/-->

@@ -1,5 +1,5 @@
 import math
-# pypy 0.29秒
+# pypy 0.29ç§’
 prime = [2, 3]
 i = 4
 sum = 5
