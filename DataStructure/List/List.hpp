@@ -3,147 +3,128 @@
 #include <cwchar>
 #include <vector>
 using std::vector;
+#include <cstdio>
 #include <memory>
 using std::make_shared, std::shared_ptr;
 using std::make_unique, std::unique_ptr;
 
-enum Result { OK, FAILED };
-
 template <typename T>
 class List {
-  public:
-    T *data;
-    size_t length;
-    size_t size;
-    Result result;
+    T *_data;
+    size_t _length;
+    size_t _size;
+    void extend_memory (size_t msize) {
+        assert (msize > _size);
+        T *newdata = new T[msize];
+        auto ret = memcpy (newdata, _data, sizeof (T) * _length);
+        assert (ret == newdata);
+        delete[] _data;
+        _data = newdata;
+        _size = msize;
+        //printf("mem: %d\n",msize);
+    }
+    void extend_memory() { extend_memory (_length * 2); }
 
   public:
     List() {
-        size = 16;
-        length = 0;
-        data = new T[size];
-        result = OK;
+        _size = 16;
+        _length = 0;
+        _data = new T[_size];
     }
-    List (std::initializer_list<int> list) {
-        size = 16;
-        length = 0;
-        data = new T[size];
-        result = OK;
+    List (std::initializer_list<T> list) {
+        _size = 16;
+        _length = 0;
+        _data = new T[_size];
         // List(); 为什么不行？
         this->push_back (list);
     }
-    // 从1开始索引
-    ~List() { delete[] data; }
-    Result getLastError() { return result; }
-    void clearList() { length = 0; }
-    bool listEmpty() { return length == 0; }
-    size_t listLength() { return length; }
+
+    ~List() { delete[] _data; }
+    void clear() { _length = 0; }
+    bool emptyQ() { return _length == 0; }
+    size_t length() { return _length; }
+    size_t size() { return _size; }
+    T *data() { return _data; }
     T &operator[] (size_t i) {
-        assert (i < length);
-        return data[i];
+        assert (i < _length);
+        return _data[i];
     }
-    T &getElem (size_t i) {
-        assert (i > 0 && i <= length);
-        return data[i - 1];
-    }
-    size_t locateElem (T e) {
-        for (size_t i = 0; i < length; i++) {
-            if (data[i] == e) {
-                return i + 1;
+    size_t locate (T e) {
+        for (size_t i = 0; i < _length; i++) {
+            if (_data[i] == e) {
+                return i;
             }
         }
-        return 0;
+        assert (1 == 0);
     }
-    T &priorElem (T e) {
-        auto i = locateElem (e) - 1;
-        if (i - 1 >= 0) {
-            return data[i - 1];
-        }
-        result = FAILED;
-        return nullptr;
+    T &pred (T e) {
+        auto i = locate (e);
+        assert (i > 0);
+        return _data[i - 1];
     }
-    T &nextElem (T e) {
-        auto i = locateElem (e) - 1;
-        if (i + 1 < length) {
-            return data[i + 1];
-        }
-        result = FAILED;
-        return nullptr;
+    T &succ (T e) {
+        auto i = locate (e);
+        assert (i + 1 < _length);
+        return _data[i + 1];
     }
     List<T> &push_back (T e) {
-        if (length >= size) {
-            extendMem();
+        if (_length >= _size) {
+            extend_memory();
         }
-        data[length++] = e;
+        _data[_length++] = e;
         return *this;
     }
-    List<T> &push_back (std::initializer_list<int> list) {
-        for (auto it = list.begin(); it != list.end(); ++it) {
-            this->push_back (*it);
-        }
+    List<T> &push_back (std::initializer_list<T> list) {
+        for (auto i : list)
+            push_back (i);
         return *this;
     }
     T &pop() {
-        if (length > 0)
-            return data[length--];
-        return nullptr;
+        assert (_length > 0);
+        return _data[--_length];
     }
-    List<T> &insert (T e, size_t i) {
-        if (length >= size) {
-            extendMem();
+    List<T> &insert (size_t pos, T val) {
+        if (_length >= _size) {
+            extend_memory();
         }
-        for (int c = length - 1; c >= i - 1; c--)
-            data[c + 1] = data[c];
-        data[i - 1] = e;
+        for (int c = _length - 1; c >= pos; c--)
+            _data[c + 1] = _data[c];
+        _data[pos] = val;
+        _length++;
         return *this;
     }
-    T del (size_t i) {
-        assert (i <= length && i > 0);
-        T ret = data[i - 1];
-        for (int c = i; c < length; c++) {
-            data[c - 1] = data[c];
+    List<T> &rm (size_t pos) {
+        assert (pos < _length && pos >= 0);
+        for (int c = pos + 1; c < _length; c++) {
+            _data[c - 1] = _data[c];
         }
-        length--;
-        return ret;
-    }
-    List<T> &rm (size_t i) {
-        assert (i <= length && i > 0);
-        for (int c = i; c < length; c++) {
-            data[c - 1] = data[c];
-        }
-        length--;
+        _length--;
         return *this;
     }
-    void extendMem (size_t msize) {
-        assert (msize > size);
-        T *newdata = new T[msize];
-        auto ret = memcpy (newdata, data, sizeof (T) * length);
-        assert (ret == newdata);
-        delete[] data;
-        data = newdata;
-        size = msize;
+    List<T> &rm () {
+        assert (_length > 0);
+        return rm(_length - 1);
     }
-    void extendMem() { extendMem (length * 2); }
     List<T> &traverse (void (*f) (T &)) {
-        for (int i = 0; i < length; i++) {
-            f (data[i]);
+        for (int i = 0; i < _length; i++) {
+            f (_data[i]);
         }
         return *this;
     }
     template <typename R>
-    shared_ptr<vector<R>> ptraverse (R (*f) (T &)) {
-        shared_ptr<vector<R>> ret = make_shared<vector<R>>();
-        for (int i = 0; i < length; i++) {
-            ret->push_back (f (data[i]));
+    shared_ptr<vector<R>> straverse (R (*f) (T &)) {
+        shared_ptr<vector<R>> val = make_shared<vector<R>>();
+        for (int i = 0; i < _length; i++) {
+            val->push_back (f (_data[i]));
         }
-        return ret;
+        return val;
     }
     template <typename R>
     vector<R> traverse (R (*f) (T &)) { // 在栈增长之前，要立刻复制
-        vector<R> ret = vector<R>();    // 局部变量
-        for (int i = 0; i < length; i++) {
-            ret.push_back (f (data[i]));
+        vector<R> val = vector<R>();    // 局部变量
+        for (int i = 0; i < _length; i++) {
+            val.push_back (f (_data[i]));
         }
-        return ret;
+        return val;
     }
 };
